@@ -1,10 +1,8 @@
-// /pages/api/users/[userId].js
-
 import { NextResponse } from "next/server";
 import { supabase } from "@/utils/createClient"; // Import your Supabase client
 
-export async function GET(request) {
-	const { userId } = request.query;
+export async function GET(request, { params }) {
+	const { userId } = params;
 
 	if (!userId) {
 		return NextResponse.json(
@@ -17,7 +15,7 @@ export async function GET(request) {
 		// Fetch user from Supabase
 		const { data: user, error: fetchError } = await supabase
 			.from("users")
-			.select("id, username, email, created_at, updated_at") // Add other fields if needed
+			.select("id, username, email, profile_photo, first_name, last_name, created_at, updated_at") // Add other fields if needed
 			.eq("id", userId)
 			.single();
 
