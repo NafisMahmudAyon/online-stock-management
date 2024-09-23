@@ -6,6 +6,7 @@ import StoreList from "../Store/StoreList";
 
 const Menu = ({
 	activeMenu,
+	shopsReload,
 	setActiveMenu,
 	setSelectedShop,
 	setStoreSubMenu,
@@ -25,6 +26,7 @@ const Menu = ({
 				onClick={() => setActiveMenu("Create Shop")}
 			/>
 			<StoreList
+				shopsReload={shopsReload}
 				activeMenu={activeMenu}
 				setActiveMenu={setActiveMenu}
 				setSelectedShop={setSelectedShop} // Pass setSelectedShop to StoreList

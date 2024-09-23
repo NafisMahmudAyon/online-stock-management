@@ -4,6 +4,7 @@ import MenuItem from "../Menu/MenuItem";
 
 const StoreList = ({
 	activeMenu,
+	shopsReload,
 	setActiveMenu,
 	setSelectedShop,
 	setStoreSubMenu,
@@ -21,7 +22,7 @@ const StoreList = ({
 				try {
 					const response = await fetch(`/api/shops`, {
 						headers: {
-							"user-id": user.userDetails.id, // Pass user ID in headers
+							"user-email": user.userDetails.email, // Pass user ID in headers
 						},
 					});
 					const data = await response.json();
@@ -40,7 +41,12 @@ const StoreList = ({
 
 			fetchShops();
 		}
-	}, [user]);
+	}, [user, shopsReload]);
+
+	// if (shops.length > 0) {
+	// 	setLoading(false);
+	// }
+	// console.log(shops);
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>{error}</p>;
@@ -65,9 +71,7 @@ const StoreList = ({
 								}}
 							/>
 							{activeMenu === `Store${shop.id}` && ( // Show sub-menu only for the active shop
-								<ul
-									
-									>
+								<ul>
 									<MenuItem
 										active={activeSubMenu === "Add User"}
 										title="Add User"

@@ -1,10 +1,24 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import AddUser from "./AddUser";
 import Users from "./Users";
 import CreateProduct from "./CreateProduct";
 import AllProducts from "./AllProducts";
+import Breadcrumbs from "../Breadcrumbs";
 
 const Store = ({ shop, subMenu }) => {
+	const [subMenuTitle, setSubMenuTitle] = useState("");
+
+	useEffect(() => {
+		const titles = {
+			addUser: "Add User",
+			users: "Users",
+			createProduct: "Create Product",
+			allProducts: "All Products",
+		};
+		setSubMenuTitle(titles[subMenu] || "");
+	}, [subMenu]);
+
 	if (!shop) {
 		return <p>No shop selected.</p>;
 	}
@@ -26,7 +40,9 @@ const Store = ({ shop, subMenu }) => {
 
 	return (
 		<div>
-			<h1>{shop.name}</h1>
+			<Breadcrumbs
+				items={subMenuTitle ? [shop.name, subMenuTitle] : [shop.name]}
+			/>
 			{renderSubMenu()}
 		</div>
 	);

@@ -15,44 +15,16 @@ export default function Dashboard() {
 	const [activeMenu, setActiveMenu] = useState("Dashboard");
 	const [selectedShop, setSelectedShop] = useState(null);
 	const [storeSubMenu, setStoreSubMenu] = useState(null);
-	const [shops, setShops] = useState([]); // State for shop list
+	const [shops, setShops] = useState(false); // State for shop list
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
 	console.log(activeMenu)
 
-	// Fetch shops owned or managed by the user
-	const fetchShops = async () => {
-		try {
-			const response = await fetch("/api/shops", {
-				headers: {
-					"user-id": user.userDetails.id,
-				},
-			});
-			const data = await response.json();
-
-			if (response.ok) {
-				setShops(data.shops);
-			} else {
-				setError(data.error || "Failed to fetch shops.");
-			}
-		} catch (err) {
-			setError("Something went wrong. Please try again.");
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		if (user) {
-			fetchShops();
-		}
-	}, [user]);
 
 	// Refresh shop list after creating a shop
 	const handleShopCreated = () => {
-		setLoading(true);
-		fetchShops();
+		setShops(!shops)
 	};
 
 	// Render content based on active menu and selected shop
@@ -77,7 +49,7 @@ export default function Dashboard() {
 		}
 	};
 
-	console.log(activeMenu.includes("Store"), "dsdadasdasdsdsfsd", selectedShop)
+	
 
 	return (
 		<div className="flex gap-8 text-mainColor justify-start px-6 ">
@@ -85,8 +57,10 @@ export default function Dashboard() {
 				<Profile />
 				<Menu
 					activeMenu={activeMenu}
+					shopsReload={shops}
 					setActiveMenu={(menu) => {
 						setActiveMenu(menu);
+						
 						// Reset selected shop and submenu when navigating to a non-shop menu
 						if (!menu.includes("Store")) {
 							setSelectedShop(null);
@@ -102,24 +76,9 @@ export default function Dashboard() {
 			</aside>
 			<div className="min-w-[340px] max-w-[20%]"></div>
 			<main className="flex-1 mt-14 w-full ">
-				{loading ? (
-					<p>Loading...</p>
-				) : error ? (
-					<p>{error}</p>
-				) : (
-					<>
-						{/* Conditionally render StoreList if activeMenu is "Store" */}
-						{activeMenu === "Store" && (
-							<StoreList
-								activeMenu={activeMenu}
-								setActiveMenu={setActiveMenu}
-								setSelectedShop={setSelectedShop}
-								setStoreSubMenu={setStoreSubMenu}
-							/>
-						)}
+				
 						{renderContent()}
-					</>
-				)}
+					
 			</main>
 		</div>
 	);

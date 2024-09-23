@@ -32,10 +32,11 @@ const CreateStore = ({ onShopCreated }) => {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ name: shopName, userId: user.userDetails.id }), // Pass user.id in the request body
+				body: JSON.stringify({ name: shopName, userId: user.userDetails.id, userEmail: user.userDetails.email }), // Pass user.id in the request body
 			});
 
 			const data = await response.json();
+			console.log(data)
 
 			if (response.ok) {
 				setSuccess("Shop created successfully!");

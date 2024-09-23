@@ -2,7 +2,7 @@ import { supabase } from "@/utils/createClient"; // Assuming Supabase client is 
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-	const { name, userId } = await request.json(); // Get shop name and userId from the request body
+	const { name, userId, userEmail } = await request.json(); // Get shop name and userId from the request body
 
 	if (!name) {
 		return NextResponse.json(
@@ -18,12 +18,15 @@ export async function POST(request) {
 		);
 	}
 
+	// Start a transaction
+	// const transaction = supabase.transaction();
+
 	try {
 		// Generate a unique slug for the shop
 		const slug = `${name.toLowerCase().replace(/\s+/g, "-")}`;
 
 		// Insert new shop into the database
-		const { data, error } = await supabase
+		const { data: shopData, error: shopError } = await supabase
 			.from("shops")
 			.insert({
 				owner_id: userId, // Use the userId passed from the frontend
@@ -32,16 +35,43 @@ export async function POST(request) {
 			})
 			.select();
 
-		if (error) {
+		if (shopError) {
+			// Rollback if shop creation fails
+			// await transaction.rollback();
 			return NextResponse.json(
 				{ error: "Failed to create the shop." },
+				// { error: shopError.message },
+				{ status: 500 }
+			);
+		}
+		console.log(shopData);
+		const shop = shopData[0];
+
+		// Insert the owner's role into shop_user_roles table
+		const { error: roleError } = await supabase.from("shop_user_roles").insert({
+			shop_id: shop.id, // Reference the created shop ID
+			user_id: userId,
+			user_email: userEmail,
+			role: "owner", // Assign the owner role
+		});
+
+		if (roleError) {
+			// Rollback the transaction if assigning the role fails
+			// await transaction.rollback();
+			return NextResponse.json(
+				{ error: "Failed to assign owner role to the user." },
 				{ status: 500 }
 			);
 		}
 
-		// Successfully created the shop
-		return NextResponse.json({ shop: data[0] }, { status: 201 });
+		// Commit the transaction if both operations succeed
+		// await transaction.commit();
+
+		// Successfully created the shop and assigned the role
+		return NextResponse.json({ shop }, { status: 201 });
 	} catch (error) {
+		// Rollback in case of any other errors
+		// await transaction.rollback();
 		return NextResponse.json(
 			{ error: "Internal Server Error", details: error.message },
 			{ status: 500 }
@@ -49,10 +79,43 @@ export async function POST(request) {
 	}
 }
 
-export async function GET(request) {
-	const userId = request.headers.get("user-id"); // Get user ID from headers
+// export async function GET(request) {
+// 	const userId = request.headers.get("user-id"); // Get user ID from headers
 
-	if (!userId) {
+// 	if (!userId) {
+// 		return NextResponse.json(
+// 			{ error: "Unauthorized. You must be logged in to view shops." },
+// 			{ status: 401 }
+// 		);
+// 	}
+
+// 	try {
+// 		// Fetch shops where the user is either the owner or has some management role
+// 		const { data, error } = await supabase
+// 			.from("shops")
+// 			.select("*")
+// 			.or(`owner_id.eq.${userId}`);
+
+// 		if (error) {
+// 			return NextResponse.json(
+// 				{ error: error  },
+// 				{ status: 500 }
+// 			);
+// 		}
+
+// 		return NextResponse.json({ shops: data }, { status: 200 });
+// 	} catch (error) {
+// 		return NextResponse.json(
+// 			{ error: "Internal Server Error", details: error.message },
+// 			{ status: 500 }
+// 		);
+// 	}
+// }
+
+export async function GET(request) {
+	const userEmail = request.headers.get("user-email"); // Get user ID from headers
+
+	if (!userEmail) {
 		return NextResponse.json(
 			{ error: "Unauthorized. You must be logged in to view shops." },
 			{ status: 401 }
@@ -60,15 +123,15 @@ export async function GET(request) {
 	}
 
 	try {
-		// Fetch shops where the user is either the owner or has some management role
+		// Fetch shops where the user is either the owner or has a role (owner, manager, or staff) in the shop_user_roles table
 		const { data, error } = await supabase
 			.from("shops")
-			.select("*")
-			.or(`owner_id.eq.${userId}`);
+			.select("*, shop_user_roles!inner(role)")
+			.eq("shop_user_roles.user_email", userEmail);
 
 		if (error) {
 			return NextResponse.json(
-				{ error: error  },
+				{ error: "Failed to fetch shops." },
 				{ status: 500 }
 			);
 		}
