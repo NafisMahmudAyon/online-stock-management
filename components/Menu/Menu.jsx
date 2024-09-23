@@ -4,7 +4,12 @@ import { Store } from "../Icon";
 import { Dashboard } from "../Icon";
 import StoreList from "../Store/StoreList";
 
-const Menu = ({ activeMenu, setActiveMenu, setSelectedShop }) => {
+const Menu = ({
+	activeMenu,
+	setActiveMenu,
+	setSelectedShop,
+	setStoreSubMenu,
+}) => {
 	return (
 		<div className="flex-1 w-full flex flex-col gap-2">
 			<MenuItem
@@ -16,12 +21,14 @@ const Menu = ({ activeMenu, setActiveMenu, setSelectedShop }) => {
 			<MenuItem
 				title="Create Store"
 				icon={<Store className="text-actionColor" width={20} height={20} />}
-				active={activeMenu === "Create Store"}
-				onClick={() => setActiveMenu("Create Store")}
+				active={activeMenu === "Create Shop"}
+				onClick={() => setActiveMenu("Create Shop")}
 			/>
 			<StoreList
+				activeMenu={activeMenu}
 				setActiveMenu={setActiveMenu}
 				setSelectedShop={setSelectedShop} // Pass setSelectedShop to StoreList
+				setStoreSubMenu={setStoreSubMenu} // Pass setStoreSubMenu to StoreList
 			/>
 			<MenuItem
 				title="Menu 1"

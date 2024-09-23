@@ -2,7 +2,7 @@ import React from 'react'
 
 const Breadcrumbs = ({items}) => {
   return (
-    <div className='my-12'>
+    <div className='mb-12'>
       <ul className="flex items-center gap-3 text-2xl font-bold ">
         {items.map((item, index) => (
           <li key={index}>

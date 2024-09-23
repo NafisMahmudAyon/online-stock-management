@@ -2,11 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import MenuItem from "../Menu/MenuItem";
 
-const StoreList = ({ setActiveMenu, setSelectedShop }) => {
+const StoreList = ({
+	activeMenu,
+	setActiveMenu,
+	setSelectedShop,
+	setStoreSubMenu,
+}) => {
 	const { user } = useAuth(); // Get the logged-in user
 	const [shops, setShops] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [activeSubMenu, setActiveSubMenu] = useState(null);
 
 	useEffect(() => {
 		if (user) {
@@ -47,14 +53,56 @@ const StoreList = ({ setActiveMenu, setSelectedShop }) => {
 			) : (
 				<ul>
 					{shops.map((shop) => (
-						<MenuItem
-							key={shop.id}
-							title={shop.name}
-							onClick={() => {
-								setSelectedShop(shop); // Set the selected shop
-								setActiveMenu("Store"); // Activate Store menu
-							}}
-						/>
+						<li key={shop.id}>
+							<MenuItem
+								active={activeMenu === `Store${shop.id}`} // Check if this shop is active by comparing its ID
+								title={shop.name}
+								onClick={() => {
+									setSelectedShop(shop); // Set the selected shop
+									setStoreSubMenu(null); // Reset sub-menu
+									setActiveMenu(`Store${shop.id}`); // Set the shop's ID as the active menu
+									setActiveSubMenu(null); // Reset active sub-menu
+								}}
+							/>
+							{activeMenu === `Store${shop.id}` && ( // Show sub-menu only for the active shop
+								<ul
+									
+									>
+									<MenuItem
+										active={activeSubMenu === "Add User"}
+										title="Add User"
+										onClick={() => {
+											setStoreSubMenu("addUser");
+											setActiveSubMenu("Add User"); // Set the active sub-menu
+										}}
+									/>
+									<MenuItem
+										active={activeSubMenu === "Users"}
+										title="Users"
+										onClick={() => {
+											setStoreSubMenu("users");
+											setActiveSubMenu("Users"); // Set the active sub-menu
+										}}
+									/>
+									<MenuItem
+										active={activeSubMenu === "Create Product"}
+										title="Create Product"
+										onClick={() => {
+											setStoreSubMenu("createProduct");
+											setActiveSubMenu("Create Product"); // Set the active sub-menu
+										}}
+									/>
+									<MenuItem
+										active={activeSubMenu === "All Products"}
+										title="All Products"
+										onClick={() => {
+											setStoreSubMenu("allProducts");
+											setActiveSubMenu("All Products"); // Set the active sub-menu
+										}}
+									/>
+								</ul>
+							)}
+						</li>
 					))}
 				</ul>
 			)}

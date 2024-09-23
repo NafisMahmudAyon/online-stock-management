@@ -5,14 +5,14 @@ import { useAuth } from "@/contexts/AuthContext"; // Assuming AuthContext is cor
 import Input from "../Form/Input";
 import Breadcrumbs from "../Breadcrumbs";
 
-const CreateStore = () => {
+const CreateStore = ({ onShopCreated }) => {
+	// Add onShopCreated prop
 	const { user } = useAuth(); // Get the logged-in user
 	const router = useRouter();
 	const [shopName, setShopName] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
-  console.log(user)
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -40,6 +40,7 @@ const CreateStore = () => {
 			if (response.ok) {
 				setSuccess("Shop created successfully!");
 				setShopName(""); // Clear the form
+				onShopCreated(); // Notify parent about the new shop
 				router.push(`/dashboard`); // Redirect to shop dashboard
 			} else {
 				setError(data.error || "Failed to create shop.");
@@ -52,7 +53,7 @@ const CreateStore = () => {
 	};
 
 	return (
-		<div className="mt-12 w-full">
+		<div className="w-full">
 			<Breadcrumbs items={["Create Store"]} />
 			{error && <p className="text-red-500 mb-4">{error}</p>}
 			{success && <p className="text-green-500 mb-4">{success}</p>}
@@ -66,7 +67,6 @@ const CreateStore = () => {
 					required={true}
 					inputStyle="border-blue-500"
 				/>
-
 				<div>
 					<button
 						type="submit"
