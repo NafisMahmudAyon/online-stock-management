@@ -2,8 +2,9 @@ import React from "react";
 import MenuItem from "./MenuItem";
 import { Store } from "../Icon";
 import { Dashboard } from "../Icon";
+import StoreList from "../Store/StoreList";
 
-const Menu = ({ activeMenu, setActiveMenu }) => {
+const Menu = ({ activeMenu, setActiveMenu, setSelectedShop }) => {
 	return (
 		<div className="flex-1 w-full flex flex-col gap-2">
 			<MenuItem
@@ -17,6 +18,10 @@ const Menu = ({ activeMenu, setActiveMenu }) => {
 				icon={<Store className="text-actionColor" width={20} height={20} />}
 				active={activeMenu === "Create Store"}
 				onClick={() => setActiveMenu("Create Store")}
+			/>
+			<StoreList
+				setActiveMenu={setActiveMenu}
+				setSelectedShop={setSelectedShop} // Pass setSelectedShop to StoreList
 			/>
 			<MenuItem
 				title="Menu 1"
