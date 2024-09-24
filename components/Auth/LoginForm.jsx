@@ -1,12 +1,20 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function LoginForm() {
 	const [formData, setFormData] = useState({ email: "", password: "" });
 	const [errors, setErrors] = useState({});
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
+
+	// Check if user is already logged in and redirect to dashboard
+	useEffect(() => {
+		const existingData = JSON.parse(localStorage.getItem("stockManage"));
+		if (existingData?.userDetails) {
+			router.push("/dashboard");
+		}
+	}, [router]);
 
 	// Basic form validation
 	const validate = () => {

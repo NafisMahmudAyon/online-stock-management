@@ -5,6 +5,7 @@ import Users from "./Users";
 import CreateProduct from "./CreateProduct";
 import AllProducts from "./AllProducts";
 import Breadcrumbs from "../Breadcrumbs";
+import CreateSupplier from "./CreateSupplier";
 
 const Store = ({ shop, subMenu }) => {
 	const [subMenuTitle, setSubMenuTitle] = useState("");
@@ -33,6 +34,8 @@ const Store = ({ shop, subMenu }) => {
 				return <CreateProduct shop={shop} />;
 			case "allProducts":
 				return <AllProducts shop={shop} />;
+			case "addSupplier":
+				return <CreateSupplier shop={shop} />;
 			default:
 				return <p>Select a sub-menu item to view content.</p>;
 		}

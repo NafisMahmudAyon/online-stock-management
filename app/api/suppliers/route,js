@@ -1,0 +1,44 @@
+import { NextResponse } from 'next/server';
+import { supabase } from "@/utils/createClient"; // Assuming you have a Supabase client utility set up
+
+export async function POST(request) {
+  try {
+    const { shopId, supplierName, contactPerson, address, phoneNumber, email } = await request.json();
+
+    // Basic validation
+    if (!shopId || !supplierName || !email) {
+      return NextResponse.json(
+        { error: "Shop ID, Supplier Name, and Email are required." },
+        { status: 400 }
+      );
+    }
+
+    // Insert new supplier into the database
+    const { data, error } = await supabase
+      .from('suppliers')
+      .insert({
+        shopid: shopId,
+        suppliername: supplierName,
+        contactperson: contactPerson,
+        address,
+        phonenumber: phoneNumber,
+        email,
+      })
+      .select(); // Fetch the inserted supplier data
+
+    if (error) {
+      console.log(error)
+      return NextResponse.json(
+        { error: "Failed to create supplier.", details: error.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ message: "Supplier created successfully", supplier: data }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal Server Error", details: error.message },
+      { status: 500 }
+    );
+  }
+}

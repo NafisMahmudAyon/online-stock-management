@@ -104,6 +104,14 @@ const StoreList = ({
 											setActiveSubMenu("All Products"); // Set the active sub-menu
 										}}
 									/>
+									<MenuItem
+										active={activeSubMenu === "Add Supplier"}
+										title="Add Supplier"
+										onClick={() => {
+											setStoreSubMenu("addSupplier");
+											setActiveSubMenu("Add Supplier"); // Set the active sub-menu
+										}}
+									/>
 								</ul>
 							)}
 						</li>
