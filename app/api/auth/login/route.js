@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request) {
 	const { email, password } = await request.json();
-  console.log(email, password);
+	console.log(email, password);
 
 	if (!email || !password) {
 		return NextResponse.json(
@@ -23,7 +23,7 @@ export async function POST(request) {
 			.eq("email", email)
 			.single();
 
-      console.log(user)
+		console.log(user);
 
 		if (fetchError || !user) {
 			return NextResponse.json(
@@ -35,7 +35,7 @@ export async function POST(request) {
 		// Compare password
 		const isMatch = await bcrypt.compare(password, user.password_hash);
 
-    console.log(isMatch)
+		console.log(isMatch);
 
 		if (!isMatch) {
 			return NextResponse.json(
@@ -45,7 +45,9 @@ export async function POST(request) {
 		}
 
 		// Generate JWT
-		const userData = {userDetails :{ id: user.id, username: user.username, email:email }};
+		const userData = {
+			userDetails: { id: user.id, username: user.username, email: email },
+		};
 
 		return NextResponse.json({ userData }, { status: 200 });
 	} catch (error) {

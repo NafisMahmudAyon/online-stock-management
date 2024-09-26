@@ -150,6 +150,131 @@ CREATE TABLE purchase_items (
 );
 ```
 
+///////// some table updated
+
+## Suppliers Table
+
+```sql
+CREATE TABLE suppliers (
+    supplierid SERIAL PRIMARY KEY,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    suppliername VARCHAR(255) NOT NULL,
+    contactperson VARCHAR(255),
+    address TEXT,
+    phonenumber VARCHAR(20),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Products Table
+
+```sql
+CREATE TABLE products (
+    productid SERIAL PRIMARY KEY,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    productname VARCHAR(255) NOT NULL,
+    description TEXT,
+    shortdescription TEXT,
+    sku VARCHAR(100) UNIQUE NOT NULL,
+    averagerating DECIMAL(3, 2) DEFAULT 0.00,
+    ratingcount INTEGER DEFAULT 0,
+    categories TEXT[],  -- Array for product categories
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Product Types Table
+
+```sql
+CREATE TABLE product_types (
+    producttypeid SERIAL PRIMARY KEY,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    producttype VARCHAR(50) NOT NULL CHECK (producttype IN ('single', 'variable')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Product Supplier Entries Table
+
+```sql
+CREATE TABLE product_supplier_entries (
+    entryid SERIAL PRIMARY KEY,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    supplierid INTEGER REFERENCES suppliers(supplierid) ON DELETE CASCADE,
+    producttypeid INTEGER REFERENCES product_types(producttypeid) ON DELETE CASCADE,
+    purchasedate DATE NOT NULL,
+    purchaseunitprice DECIMAL(10, 2),  -- For single product purchases
+    purchasequantity INTEGER,  -- For single product purchases
+    supplyvariationid INTEGER[],  -- For variable products, stores variation IDs
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Supply Variants Table
+
+```sql
+CREATE TABLE supply_variants (
+    supplyvariationid SERIAL PRIMARY KEY,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    purchaseprice DECIMAL(10, 2),
+    purchasequantity INTEGER,
+    attributes JSONB,  -- Stores variation details like color and size
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Product Prices Table
+
+```sql
+CREATE TABLE product_prices (
+    priceid SERIAL PRIMARY KEY,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    unitprice DECIMAL(10, 2),  -- For single products
+    saleprice DECIMAL(10, 2),  -- Discounted sale price
+    dateonsalefrom DATE,
+    dateonsaleto DATE,
+    variationsprice INTEGER[],  -- List of productvariantid for variable product prices
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Product Variations Table
+
+```sql
+CREATE TABLE product_variations (
+    productvariantid SERIAL PRIMARY KEY,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
+    supplyvariationid INTEGER REFERENCES supply_variants(supplyvariationid) ON DELETE CASCADE,
+    sku VARCHAR(100),  -- SKU for the specific variation
+    price DECIMAL(10, 2),  -- Price for the variation
+    sale_price DECIMAL(10, 2),  -- Sale price for the variation
+    sale_price_start_date DATE,
+    sale_price_end_date DATE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## Product Images Table.
+
+```sql
+CREATE TABLE product_images (
+    id SERIAL PRIMARY KEY,
+    productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    image_url TEXT NOT NULL
+);
+
 
 # API List for Single Product Stock Management System
 User APIs

@@ -149,14 +149,12 @@ export default function SignupForm() {
 				return;
 			}
 		}
-let signupData = {...formData, profile_photo}
-console.log(signupData)
+		let signupData = { ...formData, profile_photo };
+		console.log(signupData);
 		try {
 			const response = await fetch("/api/auth/signup", {
 				method: "POST",
-				body: JSON.stringify(
-					signupData
-				),
+				body: JSON.stringify(signupData),
 				headers: {
 					"Content-Type": "application/json",
 				},

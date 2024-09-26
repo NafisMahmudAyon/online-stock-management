@@ -6,14 +6,14 @@ export async function POST(request) {
 		const { shopId, supplierName, contactPerson, address, phoneNumber, email } =
 			await request.json();
 
-      console.log(
-				shopId,
-				supplierName,
-				contactPerson,
-				address,
-				phoneNumber,
-				email
-			);
+		console.log(
+			shopId,
+			supplierName,
+			contactPerson,
+			address,
+			phoneNumber,
+			email
+		);
 
 		// Basic validation
 		if (!shopId || !supplierName || !email) {
@@ -90,10 +90,45 @@ export async function POST(request) {
 	}
 }
 
-
 export async function GET(request) {
-  return NextResponse.json(
-		{ message: "Supplier created successfully" },
-		{ status: 201 }
-	);
+	const userEmail = request.headers.get("user-email"); // Get user email from headers
+
+	if (!userEmail) {
+		return NextResponse.json(
+			{ error: "Unauthorized. You must be logged in to view suppliers." },
+			{ status: 401 }
+		);
+	}
+
+	const shopId = request.headers.get("shop-id"); // Get shop ID from headers
+
+	if (!shopId) {
+		return NextResponse.json(
+			{ error: "Shop ID is required to fetch suppliers." },
+			{ status: 400 }
+		);
+	}
+
+	try {
+		// Fetch suppliers where the shop ID matches
+		const { data, error } = await supabase
+			.from("suppliers")
+			.select("*")
+			.eq("shopid", shopId);
+
+		if (error) {
+      console.log(error)
+			return NextResponse.json(
+				{ error: "Failed to fetch suppliers." },
+				{ status: 500 }
+			);
+		}
+
+		return NextResponse.json({ suppliers: data }, { status: 200 });
+	} catch (error) {
+		return NextResponse.json(
+			{ error: "Internal Server Error", details: error.message },
+			{ status: 500 }
+		);
+	}
 }

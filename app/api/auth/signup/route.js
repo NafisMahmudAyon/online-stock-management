@@ -70,10 +70,9 @@ export async function POST(request) {
 			return NextResponse.json({ error: insertError.message }, { status: 500 });
 		}
 
-
 		return NextResponse.json(
 			{
-				message: "User created successfully"
+				message: "User created successfully",
 			},
 			{ status: 201 }
 		);

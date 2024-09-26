@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import MenuItem from "../Menu/MenuItem";
 
 const StoreList = ({
+	subMenu,
 	activeMenu,
 	shopsReload,
 	setActiveMenu,
@@ -42,6 +43,14 @@ const StoreList = ({
 			fetchShops();
 		}
 	}, [user, shopsReload]);
+
+	useEffect(() => {
+		if(subMenu?.length > 0){
+			if(subMenu === "allSuppliers"){
+				setActiveSubMenu("All Suppliers")
+			}
+		}
+	}, [subMenu]);
 
 	// if (shops.length > 0) {
 	// 	setLoading(false);
@@ -110,6 +119,14 @@ const StoreList = ({
 										onClick={() => {
 											setStoreSubMenu("addSupplier");
 											setActiveSubMenu("Add Supplier"); // Set the active sub-menu
+										}}
+									/>
+									<MenuItem
+										active={activeSubMenu === "All Suppliers"}
+										title="All Suppliers"
+										onClick={() => {
+											setStoreSubMenu("allSuppliers");
+											setActiveSubMenu("All Suppliers"); // Set the active sub-menu
 										}}
 									/>
 								</ul>

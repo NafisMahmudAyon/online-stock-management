@@ -30,7 +30,13 @@ export default function Dashboard() {
 	// Render content based on active menu and selected shop
 	const renderContent = () => {
 		if (activeMenu.includes("Store") && selectedShop) {
-			return <Store shop={selectedShop} subMenu={storeSubMenu} />;
+			return (
+				<Store
+					shop={selectedShop}
+					subMenu={storeSubMenu}
+					setSubMenu={setStoreSubMenu}
+				/>
+			);
 		}
 
 		switch (activeMenu) {
@@ -56,11 +62,12 @@ export default function Dashboard() {
 			<aside className="fixed top-0 left-0 min-w-[340px] max-w-[20%] px-2 py-10 flex flex-col items-start h-[100vh] overflow-y-scroll ">
 				<Profile />
 				<Menu
+					subMenu={storeSubMenu}
 					activeMenu={activeMenu}
 					shopsReload={shops}
 					setActiveMenu={(menu) => {
 						setActiveMenu(menu);
-						
+
 						// Reset selected shop and submenu when navigating to a non-shop menu
 						if (!menu.includes("Store")) {
 							setSelectedShop(null);
@@ -75,11 +82,7 @@ export default function Dashboard() {
 				</button>
 			</aside>
 			<div className="min-w-[340px] max-w-[20%]"></div>
-			<main className="flex-1 mt-14 w-full ">
-				
-						{renderContent()}
-					
-			</main>
+			<main className="flex-1 mt-14 w-full ">{renderContent()}</main>
 		</div>
 	);
 }

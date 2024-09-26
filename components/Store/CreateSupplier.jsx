@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const CreateSupplier = ({ shop }) => {
+const CreateSupplier = ({ shop, onSupplierCreated }) => {
 	const [supplierName, setSupplierName] = useState("");
 	const [contactPerson, setContactPerson] = useState("");
 	const [address, setAddress] = useState("");
@@ -12,7 +12,8 @@ const CreateSupplier = ({ shop }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
 
-	// Handler to submit the form
+	console.log(error)
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError(null); // Clear any previous errors
@@ -27,7 +28,7 @@ const CreateSupplier = ({ shop }) => {
 
 		try {
 			// Send request to create supplier via the API
-			const response = await fetch("/api/suppliers", {
+			const response = await fetch("/api/supplier", {
 				method: "POST",
 				body: JSON.stringify({
 					shopId: shop.id,
@@ -43,15 +44,32 @@ const CreateSupplier = ({ shop }) => {
 			});
 
 			const result = await response.json();
+
 			if (response.ok) {
 				// Supplier created successfully
-				// router.push(`/dashboard/${shop.slug}/suppliers`); // Redirect to supplier list page
+				console.log(result.message);
+
+				// Reset form fields
+				setSupplierName("");
+				setContactPerson("");
+				setAddress("");
+				setPhoneNumber("");
+				setEmail("");
+
+				// Trigger the parent component's callback to switch to "allSuppliers"
+				if (onSupplierCreated) {
+					onSupplierCreated();
+				}
+
+				// Optionally, you can redirect the user to the supplier list page if needed
+				// router.push(`/dashboard/${shop.slug}/suppliers`);
 			} else {
 				setError(result.error || "Failed to create supplier.");
 			}
 		} catch (err) {
+			console.log(err)
 			setError("Something went wrong. Please try again.");
-      console.log(err)
+			console.error(err);
 		} finally {
 			setIsSubmitting(false);
 		}

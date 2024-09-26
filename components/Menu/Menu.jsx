@@ -5,6 +5,7 @@ import { Dashboard } from "../Icon";
 import StoreList from "../Store/StoreList";
 
 const Menu = ({
+	subMenu,
 	activeMenu,
 	shopsReload,
 	setActiveMenu,
@@ -26,6 +27,7 @@ const Menu = ({
 				onClick={() => setActiveMenu("Create Shop")}
 			/>
 			<StoreList
+			subMenu={subMenu}
 				shopsReload={shopsReload}
 				activeMenu={activeMenu}
 				setActiveMenu={setActiveMenu}

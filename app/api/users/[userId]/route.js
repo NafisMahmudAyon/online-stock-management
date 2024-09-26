@@ -15,7 +15,9 @@ export async function GET(request, { params }) {
 		// Fetch user from Supabase
 		const { data: user, error: fetchError } = await supabase
 			.from("users")
-			.select("id, username, email, profile_photo, first_name, last_name, created_at, updated_at") // Add other fields if needed
+			.select(
+				"id, username, email, profile_photo, first_name, last_name, created_at, updated_at"
+			) // Add other fields if needed
 			.eq("id", userId)
 			.single();
 
