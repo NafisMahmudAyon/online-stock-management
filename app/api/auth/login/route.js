@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request) {
 	const { email, password } = await request.json();
-	console.log(email, password);
 
 	if (!email || !password) {
 		return NextResponse.json(
@@ -23,8 +22,6 @@ export async function POST(request) {
 			.eq("email", email)
 			.single();
 
-		console.log(user);
-
 		if (fetchError || !user) {
 			return NextResponse.json(
 				{ error: "Invalid email or password." },
@@ -34,8 +31,6 @@ export async function POST(request) {
 
 		// Compare password
 		const isMatch = await bcrypt.compare(password, user.password_hash);
-
-		console.log(isMatch);
 
 		if (!isMatch) {
 			return NextResponse.json(

@@ -36,7 +36,6 @@ const CreateStore = ({ onShopCreated }) => {
 			});
 
 			const data = await response.json();
-			console.log(data)
 
 			if (response.ok) {
 				setSuccess("Shop created successfully!");

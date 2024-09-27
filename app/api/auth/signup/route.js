@@ -14,16 +14,6 @@ export async function POST(request) {
 		profile_photo,
 	} = await request.json();
 
-	console.log(
-		username,
-		email,
-		password,
-		first_name,
-		last_name,
-		gender,
-		profile_photo
-	);
-
 	// Validate required fields
 	if (!username || !email || !password) {
 		console.error("Validation failed");

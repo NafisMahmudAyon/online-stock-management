@@ -6,15 +6,6 @@ export async function POST(request) {
 		const { shopId, supplierName, contactPerson, address, phoneNumber, email } =
 			await request.json();
 
-		console.log(
-			shopId,
-			supplierName,
-			contactPerson,
-			address,
-			phoneNumber,
-			email
-		);
-
 		// Basic validation
 		if (!shopId || !supplierName || !email) {
 			return NextResponse.json(
@@ -70,7 +61,6 @@ export async function POST(request) {
 			.select(); // Fetch the inserted supplier data
 
 		if (error) {
-			console.log(error);
 			return NextResponse.json(
 				{ error: "Failed to create supplier.", details: error.message },
 				{ status: 500 }
@@ -91,14 +81,14 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
-	const userEmail = request.headers.get("user-email"); // Get user email from headers
+	// const userEmail = request.headers.get("user-email"); // Get user email from headers
 
-	if (!userEmail) {
-		return NextResponse.json(
-			{ error: "Unauthorized. You must be logged in to view suppliers." },
-			{ status: 401 }
-		);
-	}
+	// if (!userEmail) {
+	// 	return NextResponse.json(
+	// 		{ error: "Unauthorized. You must be logged in to view suppliers." },
+	// 		{ status: 401 }
+	// 	);
+	// }
 
 	const shopId = request.headers.get("shop-id"); // Get shop ID from headers
 
@@ -117,7 +107,6 @@ export async function GET(request) {
 			.eq("shopid", shopId);
 
 		if (error) {
-      console.log(error)
 			return NextResponse.json(
 				{ error: "Failed to fetch suppliers." },
 				{ status: 500 }

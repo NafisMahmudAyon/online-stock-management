@@ -1,9 +1,9 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+// import { useAuth } from "@/contexts/AuthContext";
 
 const AllSuppliers = ({ shop }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 	const [suppliers, setSuppliers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ const AllSuppliers = ({ shop }) => {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
-						"user-email": user.userDetails.email, // Replace with actual user email
+						// "user-email": user.userDetails.email, // Replace with actual user email
 						"shop-id": shop.id, // Shop ID for fetching suppliers
 					},
 				});

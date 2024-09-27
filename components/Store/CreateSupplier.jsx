@@ -12,8 +12,6 @@ const CreateSupplier = ({ shop, onSupplierCreated }) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
 
-	console.log(error)
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError(null); // Clear any previous errors
@@ -47,7 +45,6 @@ const CreateSupplier = ({ shop, onSupplierCreated }) => {
 
 			if (response.ok) {
 				// Supplier created successfully
-				console.log(result.message);
 
 				// Reset form fields
 				setSupplierName("");
@@ -67,7 +64,6 @@ const CreateSupplier = ({ shop, onSupplierCreated }) => {
 				setError(result.error || "Failed to create supplier.");
 			}
 		} catch (err) {
-			console.log(err)
 			setError("Something went wrong. Please try again.");
 			console.error(err);
 		} finally {

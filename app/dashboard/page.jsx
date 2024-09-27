@@ -19,8 +19,6 @@ export default function Dashboard() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	console.log(activeMenu)
-
 
 	// Refresh shop list after creating a shop
 	const handleShopCreated = () => {
@@ -58,7 +56,7 @@ export default function Dashboard() {
 	
 
 	return (
-		<div className="flex gap-8 text-mainColor justify-start px-6 ">
+		<>
 			<aside className="fixed top-0 left-0 min-w-[340px] max-w-[20%] px-2 py-10 flex flex-col items-start h-[100vh] overflow-y-scroll ">
 				<Profile />
 				<Menu
@@ -81,8 +79,8 @@ export default function Dashboard() {
 					Logout
 				</button>
 			</aside>
-			<div className="min-w-[340px] max-w-[20%]"></div>
-			<main className="flex-1 mt-14 w-full ">{renderContent()}</main>
-		</div>
+			
+			<main className="ml-[340px] flex-1 mt-14 w-full ">{renderContent()}</main>
+		</>
 	);
 }

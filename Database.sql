@@ -177,7 +177,7 @@ CREATE TABLE products (
     productname VARCHAR(255) NOT NULL,
     description TEXT,
     shortdescription TEXT,
-    sku VARCHAR(100) UNIQUE NOT NULL,
+    sku VARCHAR(100),
     averagerating DECIMAL(3, 2) DEFAULT 0.00,
     ratingcount INTEGER DEFAULT 0,
     categories TEXT[],  -- Array for product categories
@@ -223,6 +223,8 @@ CREATE TABLE supply_variants (
     supplyvariationid SERIAL PRIMARY KEY,
     shopid INTEGER REFERENCES shops(id) ON DELETE CASCADE,
     productid INTEGER REFERENCES products(productid) ON DELETE CASCADE,
+    supplierid INTEGER REFERENCES suppliers(supplierid) ON DELETE CASCADE,
+    sku VARCHAR(100),
     purchaseprice DECIMAL(10, 2),
     purchasequantity INTEGER,
     attributes JSONB,  -- Stores variation details like color and size

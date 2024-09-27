@@ -44,7 +44,6 @@ export async function POST(request) {
 				{ status: 500 }
 			);
 		}
-		console.log(shopData);
 		const shop = shopData[0];
 
 		// Insert the owner's role into shop_user_roles table

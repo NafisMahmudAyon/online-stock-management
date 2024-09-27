@@ -150,7 +150,6 @@ export default function SignupForm() {
 			}
 		}
 		let signupData = { ...formData, profile_photo };
-		console.log(signupData);
 		try {
 			const response = await fetch("/api/auth/signup", {
 				method: "POST",
@@ -177,7 +176,6 @@ export default function SignupForm() {
 				setErrors({ apiError: result.error });
 			}
 		} catch (error) {
-			console.error("Signup error:", error);
 			setErrors({ apiError: "Error during signup" });
 		} finally {
 			setIsSubmitting(false);

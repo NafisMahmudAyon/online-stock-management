@@ -6,15 +6,6 @@ export async function POST(request) {
 		const { shopId, supplierName, contactPerson, address, phoneNumber, email } =
 			await request.json();
 
-      console.log(
-				shopId,
-				supplierName,
-				contactPerson,
-				address,
-				phoneNumber,
-				email
-			);
-
 		// Basic validation
 		if (!shopId || !supplierName || !email) {
 			return NextResponse.json(
@@ -70,7 +61,6 @@ export async function POST(request) {
 			.select(); // Fetch the inserted supplier data
 
 		if (error) {
-			console.log(error);
 			return NextResponse.json(
 				{ error: "Failed to create supplier.", details: error.message },
 				{ status: 500 }
