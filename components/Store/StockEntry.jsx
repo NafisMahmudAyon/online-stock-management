@@ -37,10 +37,7 @@ const StockEntry = ({ shop }) => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-	const [selectedAttributeCombo, setSelectedAttributeCombo] = useState({
-		color: "",
-		size: "",
-	});
+	
 
 	useEffect(() => {
 		const fetchSuppliers = async () => {

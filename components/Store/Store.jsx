@@ -8,6 +8,7 @@ import Breadcrumbs from "../Breadcrumbs";
 import CreateSupplier from "./CreateSupplier";
 import AllSuppliers from "./AllSuppliers"; // Ensure this component exists
 import StockEntry from "./StockEntry";
+import AllEntry from "./AllEntry";
 
 const Store = ({ shop, subMenu, setSubMenu }) => {
 	const [subMenuTitle, setSubMenuTitle] = useState("");
@@ -20,7 +21,8 @@ const Store = ({ shop, subMenu, setSubMenu }) => {
 			createProduct: "Create Product",
 			allProducts: "All Products",
 			allSuppliers: "All Suppliers", // New submenu title
-			stockEntry: "Stock Entry", // New submenu title
+			stockEntry: "Stock Entry",
+			allEntry: "All Entry",
 		};
 		setSubMenuTitle(titles[subMenu] || "");
 	}, [subMenu]);
@@ -55,6 +57,8 @@ const Store = ({ shop, subMenu, setSubMenu }) => {
 				return <AllSuppliers shop={shop} />; // AllSuppliers component for listing suppliers
 			case "stockEntry":
 				return <StockEntry shop={shop} />;
+			case "allEntry":
+				return <AllEntry shop={shop} />;
 			default:
 				return <p>Select a sub-menu item to view content.</p>;
 		}

@@ -131,10 +131,18 @@ const StoreList = ({
 									/>
 									<MenuItem
 										active={activeSubMenu === "Stock Entry"}
-										title="Stock Entry"
+										title="Add Stock Entry"
 										onClick={() => {
 											setStoreSubMenu("stockEntry");
 											setActiveSubMenu("Stock Entry"); // Set the active sub-menu
+										}}
+									/>
+									<MenuItem
+										active={activeSubMenu === "All Entry"}
+										title="All Entry"
+										onClick={() => {
+											setStoreSubMenu("allEntry");
+											setActiveSubMenu("All Entry"); // Set the active sub-menu
 										}}
 									/>
 								</ul>
