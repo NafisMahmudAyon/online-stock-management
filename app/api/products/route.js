@@ -78,6 +78,43 @@ export async function GET(request) {
 			{ status: 500 }
 		);
 	}
+	if (data) {
+		const products = data;
+		for (let i = 0; i < products.length; i++) {
+			const prodID = products[i].productid;
+			// const { data: prodType, error: prodTypeError } = await supabase
+			// 	.from("product_types")
+			// 	.select("producttype")
+			// 	.eq("shopid", shopId)
+			// 	.eq("productid", prodID);
+			// console.log(prodTypeError);
+			// console.log(prodType);
+			const { data: prodVariations, error: prodError } = await supabase
+				.from("supply_variants")
+				.select("*")
+				.eq("shopid", shopId)
+				.eq("productid", prodID);
+
+			if (prodError) {
+				console.error(
+					`Error fetching variations for product ${prodID}:`,
+					prodError
+				);
+				return NextResponse.json(
+					{
+						error: `Error fetching variations for product ${prodID}`,
+						details: prodError.message,
+					},
+					{ status: 500 }
+				);
+				// You could either skip this product or return an error response here.
+			} else {
+
+				products[i] = { ...products[i], prodVariations };
+			}
+		}
+	}
+	
 
 	return NextResponse.json({ products: data }, { status: 200 });
 }

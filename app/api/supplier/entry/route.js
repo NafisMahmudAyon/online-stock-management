@@ -13,16 +13,6 @@ export async function POST(request) {
 			purchasequantity,
 			supplyVariations, // Array of variations
 		} = await request.json();
-		console.log(
-			shopid,
-			productid,
-			supplierid,
-			productType,
-			purchasedate,
-			purchaseunitprice,
-			purchasequantity,
-			supplyVariations
-		);
 
 		// Validate required fields
 		if (!shopid || !productid || !supplierid || !productType) {
@@ -43,7 +33,6 @@ export async function POST(request) {
 			.select();
 
 		if (error) {
-			console.log(error);
 			return NextResponse.json(
 				{ error: "Failed to create product type" },
 				{ status: 500 }
@@ -70,20 +59,17 @@ export async function POST(request) {
 					supplierid: supplierid,
 					attributes: JSON.stringify(supplyVariations[i].attributes), // Ensure attributes are JSON serialized
 				};
-				console.log(variation);
 
 				const { data, error } = await supabase
 					.from("supply_variants")
 					.insert(variation)
 					.select();
 				if (error) {
-					console.log(error);
 					return NextResponse.json(
 						{ error: "Failed to create product type" },
 						{ status: 500 }
 					);
 				}
-				console.log(data[0]);
 				supplyvariationid.push(data[0].supplyvariationid);
 			}
 		}
@@ -102,7 +88,6 @@ export async function POST(request) {
 			})
 			.select();
 		if (err) {
-			console.log(err);
 			return NextResponse.json(
 				{ error: "Failed to create product type" },
 				{ status: 500 }
@@ -145,9 +130,12 @@ export async function GET(request) {
 				.select("*")
 				.eq("producttypeid", productTypeID);
 				if (e) {
-					console.log(e);
+					return NextResponse.json(
+						{ error: "Failed to create product type" },
+						{ status: 500 }
+					);
 				}
-				console.log(type)
+				
 				data[i].productType = type[0].producttype;
 
 			// Initialize supplyVariations as an empty array if it doesn't exist
@@ -162,7 +150,10 @@ export async function GET(request) {
 						.select("*")
 						.eq("supplyvariationid", supplyVariationId[j]);
 					if (err) {
-						console.log(err);
+						return NextResponse.json(
+							{ error: "Failed to create product type" },
+							{ status: 500 }
+						);
 					}
 					data[i].supplyVariations.push(supplyVariations);
 				}
